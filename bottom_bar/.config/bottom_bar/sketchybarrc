@@ -23,10 +23,10 @@ PLUGIN_DIR="$HOME/.config/bottom_bar/plugins"
 
 # Bar appearance -- sits directly beneath the top bar
 bottom_bar --bar \
-  height=32 \
+  height=24 \
   color=$BLACK \
   position=top \
-  y_offset=32 \
+  y_offset=24 \
   padding_left=10 \
   padding_right=10 \
   corner_radius=0

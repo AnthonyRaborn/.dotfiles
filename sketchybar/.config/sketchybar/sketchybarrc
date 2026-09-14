@@ -18,7 +18,7 @@ PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
 
 # Bar appearance
 sketchybar --bar \
-  height=32 \
+  height=24 \
   color=$BLACK \
   position=top \
   padding_left=10 \
@@ -43,6 +43,14 @@ for i in 1 2 3 4 5 6; do
              associated_space=$i \
              icon=$i \
              icon.color=$CYAN \
+             icon.padding_left=6 \
+             icon.padding_right=6 \
+	     padding_left=1 \
+	     padding_right=1 \
+             background.drawing=on \
+             background.color=0x30ffffff \
+             background.corner_radius=2 \
+             background.height=24 \
              label.drawing=off \
              click_script="yabai -m space --focus $i" \
              script="$PLUGIN_DIR/space.sh $i" \
