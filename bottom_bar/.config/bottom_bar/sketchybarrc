@@ -15,6 +15,7 @@ MEM_ICON=$(printf '\xee\xbf\x85')
 DISK_ICON=$(printf '\xef\x82\xa0')
 NET_ICON=$(printf '\xef\x87\xab')
 WIFI_ICON=$(printf '\xef\x82\xac')
+
 PREV_ICON=$(printf '\xef\x81\x88')
 PLAYPAUSE_ICON=$(printf '\xef\x81\x8b')
 NEXT_ICON=$(printf '\xef\x81\x91')
@@ -84,7 +85,7 @@ bottom_bar --add item launch_finder left \
            label.drawing=off \
            click_script="open ~"
 
-# --- Right side: cpu, memory, disk, network stats ---
+# --- Right side: cpu, memory, disk, network stats, volume ---
 
 bottom_bar --add item cpu right \
            --set cpu \
@@ -121,6 +122,12 @@ bottom_bar --add item netstat right \
            icon.color=$CYAN \
            script="$PLUGIN_DIR/netstat.sh"
 
+bottom_bar --add item volume right \
+           --set volume \
+           update_freq=5 \
+           icon.color=$WHITE \
+           script="$PLUGIN_DIR/volume.sh"
+
 # --- Center: media controls + now playing ---
 
 bottom_bar --add item media_prev center \
@@ -149,6 +156,7 @@ bottom_bar --add item media center \
            update_freq=5 \
            icon="$NOTE_ICON" \
            icon.color=$GREEN \
+	   label.padding_left=6 \
            label.max_chars=40 \
            scroll_texts=on \
            script="$PLUGIN_DIR/media.sh"
