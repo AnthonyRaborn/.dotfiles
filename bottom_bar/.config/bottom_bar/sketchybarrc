@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+# Ayu Dark palette, matched to the top bar
+export BLACK=0xff0A0E14
+export WHITE=0xffFFFFFF
+export ORANGE=0xffFF8F40
+export CYAN=0xff95E6CB
+export GREEN=0xffAAD94C
+export PURPLE=0xffD2A6FF
+
+# Unicode Icon definitions
+NOTE_ICON=$(printf '\xef\x80\x81')
+MEM_ICON=$(printf '\xee\xbf\x85')
+DISK_ICON=$(printf '\xef\x82\xa0')
+NET_ICON=$(printf '\xef\x87\xab')
+PREV_ICON=$(printf '\xef\x81\x88')
+PLAYPAUSE_ICON=$(printf '\xef\x81\x8b')
+NEXT_ICON=$(printf '\xef\x81\x91')
+
+PLUGIN_DIR="$HOME/.config/bottom_bar/plugins"
+
+# Bar appearance -- sits directly beneath the top bar
+bottom_bar --bar \
+  height=32 \
+  color=$BLACK \
+  position=top \
+  y_offset=32 \
+  padding_left=10 \
+  padding_right=10 \
+  corner_radius=0
+
+# Global item defaults
+bottom_bar --default \
+  icon.font="FiraCode Nerd Font:Bold:14.0" \
+  icon.color=$WHITE \
+  label.font="FiraCode Nerd Font:Semibold:13.0" \
+  label.color=$WHITE \
+  padding_left=5 \
+  padding_right=5
+
+# --- Right side: memory, disk, network stats ---
+
+bottom_bar --add item memory right \
+           --set memory \
+           update_freq=10 \
+           icon="$MEM_ICON" \
+           icon.color=$PURPLE \
+           script="$PLUGIN_DIR/memory.sh"
+
+bottom_bar --add item disk right \
+           --set disk \
+           update_freq=300 \
+           icon="$DISK_ICON" \
+           icon.color=$ORANGE \
+           script="$PLUGIN_DIR/disk.sh"
+
+bottom_bar --add item netstat right \
+           --set netstat \
+           update_freq=2 \
+           icon="$NET_ICON" \
+           icon.color=$CYAN \
+           script="$PLUGIN_DIR/netstat.sh"
+
+# --- Center: media controls + now playing ---
+
+bottom_bar --add item media_prev center \
+           --set media_prev \
+           icon="$PREV_ICON" \
+           icon.color=$WHITE \
+           label.drawing=off \
+           click_script="media-control previous-track"
+
+bottom_bar --add item media_playpause center \
+           --set media_playpause \
+           icon="$PLAYPAUSE_ICON" \
+           icon.color=$WHITE \
+           label.drawing=off \
+           click_script="media-control toggle-play-pause"
+
+bottom_bar --add item media_next center \
+           --set media_next \
+           icon="$NEXT_ICON" \
+           icon.color=$WHITE \
+           label.drawing=off \
+           click_script="media-control next-track"
+
+bottom_bar --add item media center \
+           --set media \
+           update_freq=5 \
+           icon="$NOTE_ICON" \
+           icon.color=$GREEN \
+           label.max_chars=40 \
+           scroll_texts=on \
+           script="$PLUGIN_DIR/media.sh"
+
+bottom_bar --update

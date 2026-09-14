@@ -15,14 +15,12 @@ CLOCK_ICON=$(printf '\xef\x80\x97')
 CPU_ICON=$(printf '\xef\x8b\x9b')
 WIFI_ICON=$(printf '\xef\x87\xab')
 CLOUD_ICON=$(printf '\xef\x83\x82')
-NOTE_ICON=$(printf '\xef\x80\x81')  
-
 
 PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
 
 # Bar appearance
 sketchybar --bar \
-  height=64 \
+  height=32 \
   color=$BLACK \
   position=top \
   padding_left=10 \
@@ -34,14 +32,12 @@ sketchybar --bar \
 sketchybar --default \
   icon.font="FiraCode Nerd Font:Bold:14.0" \
   icon.color=$WHITE \
-  icon.y_offset=16 \
   label.font="FiraCode Nerd Font:Semibold:13.0" \
   label.color=$WHITE \
-  label.y_offset=16 \
   padding_left=5 \
   padding_right=5
 
-# --- Left side: Yabai spaces + front app + music ---
+# --- Left side: Yabai spaces + front app ---
 
 for i in 1 2 3 4 5 6; do
   sketchybar --add space space.$i left \
@@ -61,15 +57,6 @@ sketchybar --add item front_app left \
            label.color=$ORANGE \
            script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
-
-sketchybar --add item media left \
-           --set media \
-           update_freq=5 \
-           icon="$NOTE_ICON" \
-           icon.color=$GREEN \
-	   label.max_chars=40 \
-	   scroll_texts=on \
-           script="$PLUGIN_DIR/media.sh" \
 
 # --- Right side: weather, network, cpu, battery, clock ---
 
@@ -108,3 +95,8 @@ sketchybar --add item weather right \
            script="$PLUGIN_DIR/weather.sh"
 
 sketchybar --update
+
+# --- Spawn the independent bottom bar ---
+if ! pgrep -q bottom_bar; then
+  bottom_bar &
+fi
