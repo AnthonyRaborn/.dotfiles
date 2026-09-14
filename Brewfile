@@ -49,3 +49,4 @@ cask "rar"
 # Control your tools with a few keystrokes
 cask "raycast"
 brew "felixkratz/formulae/borders"
+brew "desktoppr"
