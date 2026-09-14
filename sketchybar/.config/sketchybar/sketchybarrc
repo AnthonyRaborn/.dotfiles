@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+# Ayu Dark palette, matched to the rest of the setup
+export BLACK=0xff0A0E14
+export WHITE=0xffFFFFFF
+export ORANGE=0xffFF8F40
+export CYAN=0xff95E6CB
+export GREEN=0xffAAD94C
+export YELLOW=0xffFFEE99
+export RED=0xffF28779
+export PURPLE=0xffD2A6FF
+
+# Unicode Icon definitions
+CLOCK_ICON=$(printf '\xef\x80\x97')
+CPU_ICON=$(printf '\xef\x8b\x9b')
+WIFI_ICON=$(printf '\xef\x87\xab')
+CLOUD_ICON=$(printf '\xef\x83\x82')
+NOTE_ICON=$(printf '\xef\x80\x81')  
+
+
+PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
+
+# Bar appearance
+sketchybar --bar \
+  height=32 \
+  color=$BLACK \
+  position=top \
+  padding_left=10 \
+  padding_right=10 \
+  corner_radius=0 \
+  y_offset=0
+
+# Global item defaults
+sketchybar --default \
+  icon.font="FiraCode Nerd Font:Bold:14.0" \
+  icon.color=$WHITE \
+  label.font="FiraCode Nerd Font:Semibold:13.0" \
+  label.color=$WHITE \
+  padding_left=5 \
+  padding_right=5
+
+# --- Left side: Yabai spaces + front app + music ---
+
+for i in 1 2 3 4 5 6; do
+  sketchybar --add space space.$i left \
+             --set space.$i \
+             associated_space=$i \
+             icon=$i \
+             icon.color=$CYAN \
+             label.drawing=off \
+             click_script="yabai -m space --focus $i" \
+             script="$PLUGIN_DIR/space.sh $i" \
+             --subscribe space.$i space_change
+done
+
+sketchybar --add item front_app left \
+           --set front_app \
+           icon.drawing=off \
+           label.color=$ORANGE \
+           script="$PLUGIN_DIR/front_app.sh" \
+           --subscribe front_app front_app_switched
+
+sketchybar --add item media left \
+           --set media \
+           update_freq=5 \
+           icon="$NOTE_ICON" \
+           icon.color=$GREEN \
+	   label.max_chars=40 \
+	   scroll_texts=on \
+           script="$PLUGIN_DIR/media.sh" \
+
+# --- Right side: weather, network, cpu, battery, clock ---
+
+sketchybar --add item clock right \
+           --set clock \
+           update_freq=10 \
+           icon="$CLOCK_ICON" \
+           icon.color=$PURPLE \
+           script="$PLUGIN_DIR/clock.sh"
+
+sketchybar --add item cpu right \
+           --set cpu \
+           update_freq=5 \
+           icon="$CPU_ICON" \
+           icon.color=$RED \
+           script="$PLUGIN_DIR/cpu.sh"
+
+sketchybar --add item network right \
+           --set network \
+           update_freq=30 \
+           icon="$WIFI_ICON" \
+           icon.color=$CYAN \
+           script="$PLUGIN_DIR/network.sh"
+
+sketchybar --add item weather right \
+           --set weather \
+           update_freq=1800 \
+           icon="$CLOUD_ICON" \
+           icon.color=$YELLOW \
+           script="$PLUGIN_DIR/weather.sh"
+
+sketchybar --update
