@@ -1,0 +1,27 @@
+# Ayu Dark palette matched to Ghostty config
+# bg: #0A0E14, orange: #FF8F40, cyan: #95E6CB, green: #AAD94C, yellow: #FFEE99, red: #F28779, purple: #D2A6FF
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$line_break\
+$character"""
+
+[directory]
+style = "bold fg:#95E6CB"
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+symbol = " "
+style = "fg:#D2A6FF"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "fg:#F28779"
+format = "([$all_status$ahead_behind]($style))"
+
+[character]
+success_symbol = "[❯](bold fg:#AAD94C)"
+error_symbol = "[❯](bold fg:#F28779)"
