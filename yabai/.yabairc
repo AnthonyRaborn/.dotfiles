@@ -13,7 +13,7 @@ yabai -m config window_gap 8
 
 # Mouse behavior
 yabai -m config mouse_follows_focus off
-yabai -m config focus_follows_mouse off
+yabai -m config focus_follows_mouse on
 
 # Floating exceptions -- apps that shouldn't be auto-tiled
 yabai -m rule --add app="^Steam$" manage=off

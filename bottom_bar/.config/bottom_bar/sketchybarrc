@@ -40,6 +40,50 @@ bottom_bar --default \
   padding_left=5 \
   padding_right=5
 
+# --- Left side: app/location launchers, under the workspaces ---
+
+bottom_bar --add item launch_claude left \
+           --set launch_claude \
+           icon=":claude:" \
+           icon.font="sketchybar-app-font:Regular:16.0" \
+           label.drawing=off \
+           click_script="open -a 'Claude'"
+
+bottom_bar --add item launch_firefox left \
+           --set launch_firefox \
+           icon=":firefox:" \
+           icon.font="sketchybar-app-font:Regular:15.0" \
+           label.drawing=off \
+           click_script="open -a 'Firefox'"
+
+bottom_bar --add item launch_positron left \
+           --set launch_positron \
+           icon=":vscodium:" \
+           icon.font="sketchybar-app-font:Regular:15.0" \
+           label.drawing=off \
+           click_script="open -a 'Positron'"
+
+bottom_bar --add item launch_notes left \
+           --set launch_notes \
+           icon=":notes:" \
+           icon.font="sketchybar-app-font:Regular:15.0" \
+           label.drawing=off \
+           click_script="open -a 'Notes'"
+
+bottom_bar --add item launch_steam left \
+           --set launch_steam \
+           icon=":steam:" \
+           icon.font="sketchybar-app-font:Regular:15.0" \
+           label.drawing=off \
+           click_script="open -a 'Steam'"
+
+bottom_bar --add item launch_finder left \
+           --set launch_finder \
+           icon=":finder:" \
+           icon.font="sketchybar-app-font:Regular:15.0" \
+           label.drawing=off \
+           click_script="open ~"
+
 # --- Right side: cpu, memory, disk, network stats ---
 
 bottom_bar --add item cpu right \
