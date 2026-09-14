@@ -22,7 +22,7 @@ PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
 
 # Bar appearance
 sketchybar --bar \
-  height=32 \
+  height=64 \
   color=$BLACK \
   position=top \
   padding_left=10 \
@@ -34,8 +34,10 @@ sketchybar --bar \
 sketchybar --default \
   icon.font="FiraCode Nerd Font:Bold:14.0" \
   icon.color=$WHITE \
+  icon.y_offset=16 \
   label.font="FiraCode Nerd Font:Semibold:13.0" \
   label.color=$WHITE \
+  label.y_offset=16 \
   padding_left=5 \
   padding_right=5
 
@@ -77,6 +79,12 @@ sketchybar --add item clock right \
            icon="$CLOCK_ICON" \
            icon.color=$PURPLE \
            script="$PLUGIN_DIR/clock.sh"
+
+sketchybar --add item battery right \
+           --set battery \
+           update_freq=60 \
+           icon.color=$GREEN \
+           script="$PLUGIN_DIR/battery.sh"
 
 sketchybar --add item cpu right \
            --set cpu \

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-WEATHER=$(curl -s "wttr.in/?format=%t+%C" --max-time 5)
+mkdir -p ~/.cache
+shortcuts run "GetWeatherText" --output-path ~/.cache/weather.txt 2>/dev/null
+WEATHER=$(cat ~/.cache/weather.txt 2>/dev/null)
 
 if [ -z "$WEATHER" ]; then
   sketchybar --set weather label="N/A"

@@ -5,7 +5,7 @@ BATT_50=$(printf '\xef\x89\x82')
 BATT_LOW=$(printf '\xef\x89\x83')
 BATT_CHARGE=$(printf '\xef\x87\xa6')
 
-PERCENTAGE=$(pmset -g batt | grep -Eo "\d+%" | head -1 | tr -d '%')
+PERCENTAGE=$(pmset -g batt | grep -Eo "[0-9]+%" | head -1 | tr -d '%')
 CHARGING=$(pmset -g batt | grep 'AC Power')
 
 if [ -z "$PERCENTAGE" ]; then
