@@ -8,6 +8,9 @@ Stow, one package per tool.
 
 1. Install Homebrew if not already present
 2. `brew bundle --file=Brewfile` — installs everything below in one shot
+  1.    (Homebrew will prompt to `brew trust` third-party taps like
+   FelixKratz/formulae the first time you install from them — this is
+   expected, not an error.)
 3. `cd ~/.dotfiles && stow ghostty starship yabai skhd sketchybar bottom_bar zsh`
 4. Grant macOS permissions (see below) — most of this build silently fails
    without them, and the failure mode is rarely an obvious error
