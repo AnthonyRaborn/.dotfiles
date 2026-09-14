@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sketchybar --set front_app label="$INFO"
+sketchybar --set front_app label="> $INFO"

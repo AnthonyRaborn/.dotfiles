@@ -10,9 +10,11 @@ export PURPLE=0xffD2A6FF
 
 # Unicode Icon definitions
 NOTE_ICON=$(printf '\xef\x80\x81')
+CPU_ICON=$(printf '\xef\x8b\x9b')
 MEM_ICON=$(printf '\xee\xbf\x85')
 DISK_ICON=$(printf '\xef\x82\xa0')
 NET_ICON=$(printf '\xef\x87\xab')
+WIFI_ICON=$(printf '\xef\x82\xac')
 PREV_ICON=$(printf '\xef\x81\x88')
 PLAYPAUSE_ICON=$(printf '\xef\x81\x8b')
 NEXT_ICON=$(printf '\xef\x81\x91')
@@ -38,7 +40,14 @@ bottom_bar --default \
   padding_left=5 \
   padding_right=5
 
-# --- Right side: memory, disk, network stats ---
+# --- Right side: cpu, memory, disk, network stats ---
+
+bottom_bar --add item cpu right \
+           --set cpu \
+           update_freq=5 \
+           icon="$CPU_ICON" \
+           icon.color=$RED \
+           script="$PLUGIN_DIR/cpu.sh"
 
 bottom_bar --add item memory right \
            --set memory \
@@ -53,6 +62,13 @@ bottom_bar --add item disk right \
            icon="$DISK_ICON" \
            icon.color=$ORANGE \
            script="$PLUGIN_DIR/disk.sh"
+
+bottom_bar --add item network right \
+           --set network \
+           update_freq=30 \
+           icon="$WIFI_ICON" \
+           icon.color=$CYAN \
+           script="$PLUGIN_DIR/network.sh"
 
 bottom_bar --add item netstat right \
            --set netstat \

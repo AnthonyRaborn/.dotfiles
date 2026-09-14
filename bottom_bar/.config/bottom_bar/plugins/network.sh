@@ -6,7 +6,7 @@ RED=0xffF28779
 IP=$(ipconfig getifaddr en0 2>/dev/null)
 
 if [ -z "$IP" ]; then
-  sketchybar --set network icon.color=$RED label="Offline"
+  bottom_bar --set network icon.color=$RED label="Offline"
 else
-  sketchybar --set network icon.color=$CYAN label="Connected"
+  bottom_bar --set network icon.color=$CYAN label="Connected"
 fi
