@@ -11,11 +11,13 @@ Stow, one package per tool.
   1.    (Homebrew will prompt to `brew trust` third-party taps like
    FelixKratz/formulae the first time you install from them — this is
    expected, not an error.)
-3. `cd ~/.dotfiles && stow ghostty starship yabai skhd sketchybar bottom_bar zsh`
+3. `cd ~/.dotfiles && stow ghostty starship yabai skhd sketchybar bottom_bar zsh wallpaper-clock`
 4. Grant macOS permissions (see below) — most of this build silently fails
    without them, and the failure mode is rarely an obvious error
 5. `brew services start sketchybar` (this also spawns `bottom_bar`, see below)
 6. `yabai --start-service && skhd --start-service`
+7. `launchctl load ~/Library/LaunchAgents/com.raborn.wallpaper-clock.plist`
+   (only needed once — see Wallpaper section below)
 
 ## Required macOS permissions
 
@@ -95,8 +97,48 @@ silently doesn't do anything.
   `icon.padding_left`/`icon.padding_right`; the outer `padding_left/right`
   only controls spacing *between* items, not the pill itself.
 
+## Wallpaper: hourly pixel-art cycle
+
+The desktop picture changes on the hour, cycling through 24 pixel-art city
+scenes (`~/.dotfiles/wallpapers/pixel-city/0000_night.png` through
+`2300_evening.png`, one file per hour, image files themselves are **not**
+part of the `wallpaper-clock` Stow package — they're plain files sitting
+directly in the repo, not symlinked anywhere).
+
+**How it works:** `wallpaper-clock/bin/wallpaper-clock.sh` reads the
+current hour, finds the matching `HH00_*.png` file, and hands it to
+[`desktoppr`](https://github.com/scriptingosx/desktoppr) (`brew install
+desktoppr`) to set as the desktop picture. A launchd agent
+(`wallpaper-clock/Library/LaunchAgents/com.raborn.wallpaper-clock.plist`)
+runs that script at the top of every hour via 24 `StartCalendarInterval`
+entries, plus once immediately on load. `StartCalendarInterval` (not a
+plain interval timer) matters here specifically because it's a laptop —
+launchd re-runs a missed hourly firing shortly after wake if the Mac was
+asleep when it was due.
+
+**To change which image plays at a given hour:** replace or repaint the
+corresponding `HH00_*.png` file in `~/.dotfiles/wallpapers/pixel-city/`
+— same filename, same 3024x1964 resolution, no script or plist changes
+needed. The label after the hour prefix (`_night`, `_dawn`, etc.) is
+cosmetic; only the `HH00_` prefix is matched.
+
+**To change the schedule, script logic, or add a second display later:**
+edit `wallpaper-clock/bin/wallpaper-clock.sh` or the `.plist` directly in
+the repo (both are Stow symlinks back to it, so no copying), then reload:
+```
+launchctl unload ~/Library/LaunchAgents/com.raborn.wallpaper-clock.plist
+launchctl load ~/Library/LaunchAgents/com.raborn.wallpaper-clock.plist
+```
+
+**To test a change without waiting for the next hour:**
+```
+launchctl kickstart -k gui/$(id -u)/com.raborn.wallpaper-clock
+cat /tmp/wallpaper-clock.log   # confirms which file it picked and why
+```
+
 ## Structure
 
 Each top-level directory is a Stow package: `ghostty/`, `starship/`,
-`yabai/`, `skhd/`, `sketchybar/`, `bottom_bar/`, `zsh/`. Run `stow
-<package>` from the repo root to symlink it into `$HOME`.
+`yabai/`, `skhd/`, `sketchybar/`, `bottom_bar/`, `zsh/`,
+`wallpaper-clock/`. Run `stow <package>` from the repo root to symlink it
+into `$HOME`.
