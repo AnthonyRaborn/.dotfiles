@@ -27,7 +27,7 @@ bottom_bar --bar \
   height=24 \
   color=$BLACK \
   position=top \
-  y_offset=24 \
+  y_offset=32 \
   padding_left=10 \
   padding_right=10 \
   corner_radius=0

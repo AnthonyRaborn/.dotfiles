@@ -18,7 +18,7 @@ PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
 
 # Bar appearance
 sketchybar --bar \
-  height=24 \
+  height=32 \
   color=$BLACK \
   position=top \
   padding_left=10 \
