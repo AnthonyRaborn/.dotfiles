@@ -45,5 +45,51 @@ if [[ -z "$image" ]]; then
     exit 1
 fi
 
+# desktoppr only sets the wallpaper for the space currently on screen. Set
+# that first, then rewrite the per-space entries in the wallpaper store so
+# every other space/display follows (WallpaperAgent is restarted to reload).
 "$DESKTOPPR_BIN" "$image"
+
+STORE="$HOME/Library/Application Support/com.apple.wallpaper/Store/Index.plist"
+if [[ -f "$STORE" ]]; then
+    # Stop the agent first: it flushes its in-memory state on exit and would
+    # clobber our edit. launchd restarts it and it re-reads the store.
+    killall WallpaperAgent 2>/dev/null || true
+    sleep 1
+    changed="$(/usr/bin/python3 - "$STORE" "$image" <<'PY'
+import plistlib, sys, pathlib
+
+store, image = sys.argv[1], sys.argv[2]
+url = pathlib.Path(image).resolve().as_uri()
+with open(store, "rb") as f:
+    data = plistlib.load(f)
+
+def retarget(node):
+    """Point an image-file Desktop entry at `url`; return True if changed."""
+    changed = False
+    content = node.get("Desktop", {}).get("Content", {})
+    for choice in content.get("Choices", []):
+        if choice.get("Provider") != "com.apple.wallpaper.choice.image":
+            continue
+        cfg = plistlib.loads(choice["Configuration"])
+        if cfg.get("url", {}).get("relative") != url:
+            cfg["url"] = {"relative": url}
+            choice["Configuration"] = plistlib.dumps(cfg, fmt=plistlib.FMT_BINARY)
+            changed = True
+    return changed
+
+changed = False
+for space in data.get("Spaces", {}).values():
+    changed |= retarget(space.get("Default", {}))
+    for display in space.get("Displays", {}).values():
+        changed |= retarget(display)
+
+if changed:
+    with open(store, "wb") as f:
+        plistlib.dump(data, f, fmt=plistlib.FMT_BINARY)
+print("1" if changed else "0")
+PY
+)"
+fi
+
 echo "wallpaper-clock: set $(basename "$image") for hour ${hour}"
