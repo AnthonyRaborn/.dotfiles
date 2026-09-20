@@ -106,15 +106,25 @@ part of the `wallpaper-clock` Stow package — they're plain files sitting
 directly in the repo, not symlinked anywhere).
 
 **How it works:** `wallpaper-clock/bin/wallpaper-clock.sh` reads the
-current hour, finds the matching `HH00_*.png` file, and hands it to
-[`desktoppr`](https://github.com/scriptingosx/desktoppr) (`brew install
-desktoppr`) to set as the desktop picture. A launchd agent
+current hour, finds the matching `HH00_*.png` file, and points every
+entry in macOS's wallpaper store
+(`~/Library/Application Support/com.apple.wallpaper/Store/Index.plist`)
+at it, then `killall WallpaperAgent` so the agent relaunches and reloads
+the file. That store is what covers *all* spaces and displays at once.
+A launchd agent
 (`wallpaper-clock/Library/LaunchAgents/com.raborn.wallpaper-clock.plist`)
 runs that script at the top of every hour via 24 `StartCalendarInterval`
 entries, plus once immediately on load. `StartCalendarInterval` (not a
 plain interval timer) matters here specifically because it's a laptop —
 launchd re-runs a missed hourly firing shortly after wake if the Mac was
 asleep when it was due.
+
+**Why not `desktoppr`:** it only sets the space currently on screen, and
+because WallpaperAgent holds the whole store in memory and writes it back
+on any wallpaper change, calling desktoppr *after* editing the store makes
+the agent clobber the edit with its stale copy — which looked like the
+wallpaper not updating at all. It's kept only as a fallback for macOS
+versions predating the store.
 
 **To change which image plays at a given hour:** replace or repaint the
 corresponding `HH00_*.png` file in `~/.dotfiles/wallpapers/pixel-city/`
